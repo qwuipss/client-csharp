@@ -1,0 +1,82 @@
+name: Create tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        description: "Version Tag (format: major.minor.patch)"
+        required: true
+      commit_hash:
+        description: "Commit hash"
+        required: true
+        default: latest
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check workflow run ref
+        run: |
+          if [ "$RUN_REF" != "refs/heads/main" ]; then
+            echo Workflow should only be run on main branch. Workflow aborted.
+            exit 1
+          fi
+        env:
+          RUN_REF: ${{ github.ref }}
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+
+      - name: Check Version Tag format
+        run: |
+          if [[ ! $VERSION_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo Version Tag \"$VERSION_TAG\" does not match regular expression \"^[0-9]+\.[0-9]+\.[0-9]+$\". Workflow aborted.
+            exit 1
+          fi
+        env:
+          VERSION_TAG: ${{ github.event.inputs.version_tag }}
+
+      - name: Check is commit ancestor of main HEAD
+        if: github.event.inputs.commit_hash != 'latest'
+        run: |
+          set +e
+          git merge-base --is-ancestor "$COMMIT_HASH" HEAD 2> /dev/null
+          IS_ANCESTOR=$?
+          set -e
+          if [ $IS_ANCESTOR -eq 1 ]; then
+            echo Specified commit hash \"$COMMIT_HASH\" is not ancestor of main HEAD. Workflow aborted.
+            exit 1
+          fi
+        env:
+          COMMIT_HASH: ${{ github.event.inputs.commit_hash }}
+
+      - name: Check is Version Tag exist
+        run: |
+          if [ "$(git tag --list v$VERSION_TAG)" ]; then 
+            echo Version Tag \"v$VERSION_TAG\" already exists. Workflow aborted.
+            exit 1
+          fi
+        env:
+          VERSION_TAG: ${{ github.event.inputs.version_tag }}
+
+      - name: Setup Git config
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions-bot@users.noreply.github.com"
+
+      - name: Tag commit
+        run: |
+          if [ "$COMMIT_HASH" = "latest" ]; then
+            git tag v$VERSION_TAG
+          else
+            git tag v$VERSION_TAG $COMMIT_HASH
+          fi
+        env:
+          VERSION_TAG: ${{ github.event.inputs.version_tag }}
+          COMMIT_HASH: ${{ github.event.inputs.commit_hash }}
+
+      - name: Push tag
+        run: git push --set-upstream origin main v$VERSION_TAG
+        env:
+          VERSION_TAG: ${{ github.event.inputs.version_tag }}
