@@ -58,8 +58,8 @@ var trigger = new Trigger
         // From 01:00 to 23:00 GMT +05:00
         StartOffset = (int)TimeSpan.FromHours(1).TotalMinutes,
         EndOffset = (int)TimeSpan.FromHours(23).TotalMinutes,
-        TzOffset = (int)TimeSpan.FromHours(-5).TotalMinutes,
-    },
+        TzOffset = (int)TimeSpan.FromHours(-5).TotalMinutes
+    }
     // ...
 };
 
@@ -96,7 +96,7 @@ var totalTriggers = response.Total;
 await client.Trigger["trigger_id"].SetMaintenance.PutAsync(new TriggerMaintenance
 {
     // Put trigger under maintenance for 15 minutes
-    Trigger = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + (int)TimeSpan.FromMinutes(15).TotalSeconds,
+    Trigger = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + (int)TimeSpan.FromMinutes(15).TotalSeconds
     // ...
 })
 ```
@@ -114,10 +114,11 @@ await client.Trigger["trigger_id"].DeleteAsync();
 ```csharp
 var contact = new Contact
 {
-    Name = "Name",
+    Name = "Contact name",
     Type = "telegram",
     Value = "@telegram_chat",
     User = "User"
+    // ...
 };
 
 await client.Contact.PutAsync(contact);
@@ -136,8 +137,9 @@ await client.Contact["contact_id"].DeleteAsync();
 ```csharp
 var team = new TeamModel
 {
-    Name = "Name",
-    Description = "Team description",
+    Name = "Team name",
+    Description = "Team description"
+    // ...
 };
 
 await client.Teams.PostAsync(team);
@@ -162,6 +164,7 @@ var subscription = new Subscription
     IgnoreWarnings = false,
     Tags = new List<string> { "Tag" },
     TeamId = "team_id"
+    // ...
 };
 
 await client.Subscription.PutAsync(subscription);
