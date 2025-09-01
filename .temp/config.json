@@ -1,0 +1,5 @@
+{
+  "packageName": "Moira.ApiClient",
+  "apiName": "MoiraApiClient",
+  "targetFramework": "netstandard2.1"
+}
