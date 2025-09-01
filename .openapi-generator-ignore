@@ -32,3 +32,4 @@ Moira.ApiClient.sln
 README.md
 LICENSE
 moira.png
+.gitignore
