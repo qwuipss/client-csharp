@@ -16,15 +16,24 @@
         <RepositoryUrl>https://github.com/moira-alert/client-csharp.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>moira,moira-alert</PackageTags>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageIcon>moira.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="5.0.1" />
-        <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
-        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+        <None Include="../README.md" Pack="true" PackagePath="/"/>
+        <None Include="../moira.png" Pack="true" PackagePath="/"/>
+        <None Include="../LICENSE" Pack="true" PackagePath="/"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="5.0.1"/>
+        <PackageReference Include="System.Threading.Channels" Version="8.0.0"/>
+        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0"/>
     </ItemGroup>
 
 </Project>
